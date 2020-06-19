@@ -57,13 +57,18 @@ def edit(id):
     else:
         return render_template('edit.html', post=post)
 
-@app.route('/home/users/<string:name>/posts/<int:id>')
-def hello(name, id):
-    return "Hello, " + name + "your id is: " + str(id)
-
-@app.route('/onlyget', methods=['Get'])
-def get_req():
-    return "You can only get this website"
+@app.route('/posts/new', methods=['GET', 'POST'])
+def new_post():
+    if request.method == 'POST':
+        post.title = request.form['title']
+        post.author = request.form['author']
+        post.content = request.form['content']
+        new_post = BlogPost(title=post_title, content=post_content, author=post_author)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        return render_template('new_post.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
